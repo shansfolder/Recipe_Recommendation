@@ -1,0 +1,108 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Cookbook</title>
+    <link rel="stylesheet" href="/static/css/pure-min.css">
+    <link rel="stylesheet" href="/static/css/baby-blue.css">
+    <link rel="stylesheet" href="/static/css/tablesorter/blue/style.css" type="text/css" media="print, projection, screen" />
+    <script type="text/javascript" src="/static/js/jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $('#login_page').load('/login_page')
+            $('#reg_page').load('/reg_page')
+
+            {% if not request.user.is_authenticated %}
+                $('#login_page').fadeIn()
+            {% endif %}
+
+        })
+    </script>
+</head>
+
+<body>
+
+<div id="login_page" style="position: absolute; z-index: 100; visibility: inherit; display: none; left: 50%; top: 50%;">
+    <!-- login page here -->
+</div>
+
+<div id="reg_page" style="position: absolute; z-index: 100; visibility: inherit; display: none; left: 50%; top: 50%;">
+    <!-- register page here -->
+</div>
+
+<div class="pure-g-r" id="layout" style="letter-spacing:0">
+
+    <div class="pure-u" id="menu">
+        <div class="pure-menu pure-menu-open">
+            <a class="pure-menu-heading" href="/" >Cookbook</a>
+
+            <ul>
+
+                <li class="">
+                    <a href="/ingredient" >Ingredient</a>
+                </li>
+
+                <li class=" ">
+                    <a href="/recipe" >Recipe</a>
+                </li>
+
+
+                <p>&nbsp;</p>
+
+                {% if request.user.is_authenticated %}
+                    <li class="menu-item-divided">
+                        <a href="#" >{{ request.user.username }}</a>
+                    </li>
+
+                    <li class=" ">
+                        <a href="/logout/" >Logout</a>
+                    </li>
+                {% else %}
+                    <li class="menu-item-divided">
+                        <a href="#" onclick="$('#reg_page').hide();$('#login_page').fadeIn()">Login</a>
+                    </li>
+
+                    <li class=" ">
+                        <a href="#" onclick="$('#login_page').hide();$('#reg_page').fadeIn()">Register</a>
+                    </li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+
+
+
+    <div id="right">
+
+        <div class="header">
+            <h1>Cookbook</h1>
+        </div>
+
+        <div id="content" style="text-align: center;margin-top: 30px">
+
+            <a href="/ingredient/" title="Recommend by ingredients">
+                <img src="/static/image/ingredient.jpg" width="400">
+            </a>
+
+            <a href="/recipe/" title="Recommend by recipe" style="margin-left: 100px">
+                <img src="/static/image/recipe.jpg" width="400">
+            </a>
+
+            <!--
+            http://www.nipic.com/show/3/120/5370155kdd306618.html
+            http://qcyn.sina.com.cn/travel/yssh/2010/0916/1352579516.html
+            -->
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+</body>
+
+</html>

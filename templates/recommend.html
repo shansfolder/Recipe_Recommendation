@@ -1,0 +1,153 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Cookbook</title>
+    <link rel="stylesheet" href="/static/css/input.css">
+    <link rel="stylesheet" href="/static/css/pure-min.css">
+    <link rel="stylesheet" href="/static/css/baby-blue.css">
+    <link rel="stylesheet" href="/static/css/tablesorter/blue/style.css" type="text/css" media="print, projection, screen" />
+    <script type="text/javascript" src="/static/js/jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $('#login_page').load('/login_page')
+            $('#reg_page').load('/reg_page')
+
+            {% if not request.user.is_authenticated %}
+                $('#login_page').fadeIn()
+            {% endif %}
+        })
+    </script>
+</head>
+
+<body>
+
+<div id="login_page" style="position: absolute; z-index: 100; visibility: inherit; display: none; left: 50%; top: 50%;">
+    <!-- login page here -->
+</div>
+
+<div id="reg_page" style="position: absolute; z-index: 100; visibility: inherit; display: none; left: 50%; top: 50%;">
+    <!-- register page here -->
+</div>
+
+<div class="pure-g-r" id="layout" style="letter-spacing:0">
+
+    <div class="pure-u" id="menu">
+        <div class="pure-menu pure-menu-open">
+            <a class="pure-menu-heading" href="/" >Cookbook</a>
+
+            <ul>
+
+                <li class="">
+                    <a href="/ingredient" >Ingredient</a>
+                </li>
+
+                <li class=" ">
+                    <a href="/recipe" >Recipe</a>
+                </li>
+
+
+
+                <p>&nbsp;</p>
+
+
+                {% if request.user.is_authenticated %}
+                    <li class="menu-item-divided">
+                        <a href="#" >{{ request.user.username }}</a>
+                    </li>
+
+                    <li class=" ">
+                        <a href="/logout/" >Logout</a>
+                    </li>
+                {% else %}
+                    <li class="menu-item-divided">
+                        <a href="#" onclick="$('#reg_page').hide();$('#login_page').fadeIn()">Login</a>
+                    </li>
+
+                    <li class=" ">
+                        <a href="#" onclick="$('#login_page').hide();$('#reg_page').fadeIn()">Register</a>
+                    </li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+
+
+
+    <div id="right">
+
+        <div class="header">
+            <h1>Recommend Recipes</h1>
+        </div>
+
+        <div id="content" style="margin-top: 30px; ">
+
+            <div id=tab>
+                <table id="myTable" class="tablesorter" style="border-collapse: separate; border-spacing:1px;">
+
+                    <thead>
+                    <tr>
+                        <th>Recipe ID</th>
+                        <th>Recipe name</th>
+                        <th>Link</th>
+                        <th>Evaluate</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for r,e in res %}
+                        <tr >
+                            <td>{{ r.id }}</td>
+                            <td>{{ r.name }}</td>
+                            <td><a href="{{ r.link }}" >{{ r.link }}<a></td>
+                            <td>
+                                {% if e %}
+                                    {% ifequal e 'Like' %}
+                                        I like it
+                                    {% endifequal %}
+                                    {% ifequal e 'Dislike' %}
+                                        I Dislike it
+                                    {% endifequal %}
+                                {% else %}
+                                    <a href="#" class="evaluate" id="{{ r.id }}" name="{{ forloop.counter0 }}">Like</a>
+                                    &nbsp;&nbsp;
+                                    <a href="#" class="evaluate" id="{{ r.id }}" name="{{ forloop.counter0 }}">Dislike</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+    $(function(){
+        //表格显示
+        $("#myTable").tablesorter({
+            widgets: ['zebra']
+        })
+
+        $(".evaluate").click(function(){
+            $(this).parent() .load("/evaluate/", {
+                evaluate : this.innerHTML,
+                recipe_id : this.id,
+                sn : this.name
+            })
+        })
+
+    })
+</script>
+
+
+</body>
+
+</html>
